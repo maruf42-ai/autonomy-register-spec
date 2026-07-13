@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-i.schema.json",
+  "title": "Autonomy Register — Section I: Additional Notes",
+  "description": "Section I of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "additional_notes": {
+      "type": "string",
+      "description": "Freeform text. Must not be used to record data that belongs in a structured field defined in Sections 2.1–2.6. CAIO office reviews for misuse at each quarterly reconciliation. (Source of truth: CAIO office)"
+    }
+  },
+  "required": [],
+  "additionalProperties": true
+}

@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-j.schema.json",
+  "title": "Autonomy Register — Section J: RAF Mandatory Fields",
+  "description": "Section J of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "raf_responsible_use_ref": {
+      "type": "string",
+      "description": "[Mandatory for all RAF-scope systems] Format: RUA-YYYY-NNN. Must reference a current entry in REG-RAF-001. Null only where system is not yet RAF-scope assessed. (Source of truth: REG-RAF-001 — populated by CAIO office within 5 business days of assessment completion)"
+    },
+    "data_provenance_certified": {
+      "type": "boolean",
+      "description": "Values: true │ false. True only where all training dataset provenance records are complete and CAIO-approved under STD-RAF-003. Reset to false when any data retirement trigger is identified, or where a screen under STD-RAF-003 §7.3 indicates the assessment would not have passed under the corrected requirement, until the required reassessment is completed. (Source of truth: System Owner — updated within 5 business days of any provenance status change)"
+    },
+    "provenance_assessment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the most recent completed provenance assessment for the primary training dataset. Must be within the currency period for the system’s domain per STD-RAF-003 §3.3. (Source of truth: System Owner)"
+    },
+    "provenance_dataset_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Format: [SystemID]-DATA-NNN per STD-RAF-003 §2.1. Comma-separated list of all training dataset IDs for the current model version. Updated on each model version change. (Source of truth: System Owner)"
+    },
+    "consent_basis_status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Expiring (within 60 days)",
+        "Expired",
+        "Not Applicable"
+      ],
+      "description": "[Mandatory where training data includes personal information] Values: Active │ Expiring (within 60 days) │ Expired │ Not Applicable. Updated when consent basis status changes. (Source of truth: System Owner with CISO oversight)"
+    },
+    "data_quality_assessment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the most recent data quality assessment across all four dimensions (completeness, accuracy, currency, representativeness) for the primary training dataset per STD-RAF-003 §3. (Source of truth: System Owner)"
+    },
+    "data_quality_result": {
+      "type": "string",
+      "enum": [
+        "Pass",
+        "Conditional Pass",
+        "Fail"
+      ],
+      "description": "Values: Pass │ Conditional Pass │ Fail. If Fail: system may not be in production. (Source of truth: System Owner — CAIO notified immediately on Fail)"
+    },
+    "last_distribution_shift_test_date": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory for Tier 1 and 2 systems] Date of the most recent KS distribution shift test per STD-RAF-003 §3.3. Required quarterly for Tier 1; biannually for Tier 2 and 3. (Source of truth: System Owner)"
+    },
+    "distribution_shift_result": {
+      "type": "string",
+      "enum": [
+        "No Shift",
+        "Warning (approaching threshold)",
+        "Shift Detected"
+      ],
+      "description": "[Mandatory for Tier 1 and 2 systems] Values: No Shift │ Warning (approaching threshold) │ Shift Detected. Shift Detected triggers retirement assessment under STD-RAF-003 §5. (Source of truth: System Owner — CAIO notified within 5 business days of Shift Detected result)"
+    },
+    "bias_assessment_status": {
+      "type": "string",
+      "enum": [
+        "Current",
+        "Overdue",
+        "Not Required",
+        "Suspended"
+      ],
+      "description": "[Mandatory for all systems affecting individuals] Values: Current │ Overdue │ Not Required │ Suspended. Current = assessment within the cadence defined in STD-RAF-001 §4.1, with no event-triggered reassessment under POL-RAF-002 §4.2 outstanding beyond its required timeframe. Overdue = a scheduled reassessment date has passed without completion, or an event-triggered reassessment has not been completed within the timeframe specified for that trigger. (Source of truth: System Owner — CAIO monitors"
+    },
+    "last_fairness_assessment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory where bias_assessment_status ≠ Not Required] Date the most recent STD-RAF-001 fairness assessment was completed. (Source of truth: System Owner)"
+    },
+    "fairness_assessment_reference": {
+      "type": "string",
+      "description": "[Mandatory where bias_assessment_status ≠ Not Required] Reference to the STD-RAF-001 compliant assessment report. Filed in the AI QA gate record or the system’s governance file. (Source of truth: System Owner)"
+    },
+    "bias_assessment_outcome": {
+      "type": "string",
+      "enum": [
+        "Pass",
+        "Conditional Pass",
+        "Fail"
+      ],
+      "description": "[Mandatory where bias_assessment_status ≠ Not Required] Values: Pass │ Conditional Pass │ Fail. If Fail or Conditional Pass: conditions and remediation timeframe recorded in the assessment report. (Source of truth: System Owner — CAIO notified immediately on Fail)"
+    }
+  },
+  "required": [
+    "data_provenance_certified",
+    "provenance_assessment_date",
+    "provenance_dataset_ids",
+    "data_quality_assessment_date",
+    "data_quality_result"
+  ],
+  "additionalProperties": true
+}

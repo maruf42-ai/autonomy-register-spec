@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-k.schema.json",
+  "title": "Autonomy Register — Section K: Grounding and Admissibility Fields",
+  "description": "Section K of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "approved_knowledge_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "[Mandatory for all systems with retrieval-augmented generation or knowledge base grounding] Named list of approved retrieval corpora, knowledge bases, or vector stores the system is authorised to retrieve from. Format: free text with named source identifier and brief description. Any addition, removal, or material reconfiguration of a listed source constitutes a change requiring POL-EDS-004 classification. Empty array only where system has no retrieval layer. Must be updated within 5 business da"
+    },
+    "retrieval_freshness_obligation": {
+      "type": "string",
+      "description": "[Mandatory where approved_knowledge_sources is non-empty] Plain-language statement of the maximum permitted staleness for each approved knowledge source before the CAIO must be notified. Format: one entry per source in approved_knowledge_sources, specifying the source name and maximum staleness period (e.g. “Regulatory guidance corpus: maximum 30 days before CAIO notification”). Where no freshness obligation applies to a source, record “No freshness obligation — [source name].” (Source of truth:"
+    },
+    "retrieval_corpus_suspension_trigger": {
+      "type": "string",
+      "description": "[Mandatory where approved_knowledge_sources is non-empty] Consequence of freshness obligation breach by ADAE band. Low: CAIO notification within 5 business days — system may continue. Moderate: CAIO notification within 2 business days — system may continue with CAIO written approval. High: immediate CAIO notification — system suspended if re-indexing not completed within 5 business days. Critical: immediate suspension of any decision above MAM threshold — system may not resume until re-indexing ",
+      "enum": [
+        "Low",
+        "Moderate",
+        "High",
+        "Critical",
+        "Systemic"
+      ]
+    },
+    "static_authority_facts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "[Mandatory for all systems whose registered admissibility profile depends on a fact not sourced from a monitored retrieval corpus] Named list of static facts the system’s authority was assessed against — for example a counterparty risk rating, a jurisdiction classification, a sanctions status — that are not continuously retrieved from a monitored source. Format: free text with fact identifier, value at last verification, and source. Empty array only where no such static fact exists. Must be upda"
+    },
+    "external_fact_reverification_obligation": {
+      "type": "string",
+      "description": "[Mandatory where static_authority_facts is non-empty] Plain-language statement of the maximum permitted interval before each listed fact must be actively re-verified against its authoritative external source. Format: one entry per fact in static_authority_facts, specifying the fact name and maximum interval (e.g. “Counterparty trade-sanctions status: maximum 90 days before re-verification”). Where no re-verification obligation applies, record “No re-verification obligation — [fact name]”, and th"
+    },
+    "external_fact_suspension_trigger": {
+      "type": "string",
+      "description": "[Mandatory where static_authority_facts is non-empty] Consequence of re-verification obligation breach by ADAE band. Low: CAIO notification within 5 business days — system may continue. Moderate: CAIO notification within 2 business days — system may continue with CAIO written approval. High: immediate CAIO notification — system suspended if re-verification not completed within 5 business days. Critical: immediate suspension of any decision above MAM threshold — system may not resume until re-ver",
+      "enum": [
+        "Low",
+        "Moderate",
+        "High",
+        "Critical",
+        "Systemic"
+      ]
+    },
+    "retrieval_corpus_status": {
+      "type": "string",
+      "enum": [
+        "Current",
+        "Breach",
+        "Suspended"
+      ],
+      "description": "[Mandatory where approved_knowledge_sources is non-empty] Values: Current │ Breach │ Suspended. Current = all approved knowledge sources within their stated freshness obligation. Breach = one or more sources exceed the freshness obligation. Suspended = system suspended per retrieval_corpus_suspension_trigger. (Source of truth: System Owner — CAIO notified on Breach per the suspension trigger band)"
+    },
+    "external_fact_currency_status": {
+      "type": "string",
+      "enum": [
+        "Current",
+        "Breach",
+        "Suspended"
+      ],
+      "description": "[Mandatory where static_authority_facts is non-empty] Values: Current │ Breach │ Suspended. Current = all static authority facts within their stated re-verification obligation. Breach = one or more facts exceed the re-verification obligation. Suspended = system suspended per external_fact_suspension_trigger. (Source of truth: System Owner — CAIO notified on Breach per the suspension trigger band)"
+    }
+  },
+  "required": [],
+  "additionalProperties": true
+}

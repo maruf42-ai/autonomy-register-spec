@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-e.schema.json",
+  "title": "Autonomy Register — Section E: Authority Limits",
+  "description": "Section E of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "mam_limit_per_decision": {
+      "type": "number",
+      "description": "[Mandatory if financial authority] Must not exceed the tier-maximum for the delegation_tier per POL-EDS-002 Section 4. Zero for non-financial systems. (Source of truth: CAIO — approved per delegation tier)"
+    },
+    "mam_approval_authority": {
+      "type": "string",
+      "enum": [
+        "CAIO_only",
+        "CAIO_CRO",
+        "BRC_approval"
+      ],
+      "description": "[Mandatory if financial authority] Values: CAIO_only │ CAIO_CRO │ BRC_approval. Must match delegation_tier requirements. (Source of truth: CAIO office)"
+    },
+    "domain_limit_daily": {
+      "type": "number",
+      "description": "[Mandatory if financial authority] Must be ≥ mam_limit_per_decision and ≤ Board-approved domain maximum. (Source of truth: CAIO — CRO countersignature for Monitored/Delegated)"
+    },
+    "domain_limit_weekly": {
+      "type": "number",
+      "description": "[Mandatory if financial authority] ≥ domain_limit_daily. (Source of truth: CAIO)"
+    },
+    "domain_limit_monthly": {
+      "type": "number",
+      "description": "[Mandatory if financial authority] ≥ domain_limit_weekly. (Source of truth: CAIO)"
+    },
+    "customer_population_cap": {
+      "type": "number",
+      "description": "[Mandatory if customer-facing] Percentage of active customer base (0.0–1.0) or absolute customer count. Zero for non-customer-facing systems. (Source of truth: CAIO — per POL-EDS-002 §5)"
+    },
+    "decision_velocity_cap": {
+      "type": "integer",
+      "description": "[Mandatory if velocity capped] Decisions per hour. Zero if no velocity cap applies. (Source of truth: CAIO — per Autonomy Budget velocity component)"
+    },
+    "domain_limit_utilisation": {
+      "type": "number",
+      "description": "Value between 0.0 and 1.0 representing proportion of daily domain limit consumed as at review date. Triggers compliance flag at ≥ 0.80. Updated quarterly. (Source of truth: System owner — CAIO validated)"
+    }
+  },
+  "required": [],
+  "additionalProperties": true
+}

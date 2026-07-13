@@ -1,0 +1,13 @@
+{
+  "name": "autonomy-register-spec",
+  "version": "1.0.0",
+  "description": "Open JSON Schema and OpenAPI specification for the Autonomy Register.",
+  "license": "Apache-2.0",
+  "scripts": {
+    "test": "node scripts/validate.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  }
+}

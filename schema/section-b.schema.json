@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-b.schema.json",
+  "title": "Autonomy Register — Section B: Governance Classification",
+  "description": "Section B of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "autonomy_level": {
+      "type": "integer",
+      "description": "Values: 1, 2, 3, 4, or 5. Must not exceed the maximum level permitted by the organisation’s current GMI certification. (Source of truth: CAIO)",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "criticality_tier": {
+      "type": "string",
+      "enum": [
+        "Critical",
+        "High",
+        "Moderate",
+        "Low"
+      ],
+      "description": "Values: Critical │ High │ Moderate │ Low. Must be consistent with the ADAE score components. (Source of truth: CAIO)"
+    },
+    "delegation_tier": {
+      "type": "string",
+      "description": "Derived from autonomy_level × criticality_tier per POL-EDS-002 Section 4. Computed field — must match the matrix; cannot be set independently. (Source of truth: System — computed)",
+      "enum": [
+        "Supervised",
+        "Monitored",
+        "Delegated"
+      ]
+    },
+    "adae_score": {
+      "type": "integer",
+      "description": "Calculated per STD-EDS-001. Range 0–200 as a data type ceiling. Scores of 90 or above must be flagged to CRO for validation before recording (indicate maximum authority across all dimensions). Scores of 100 to 124 are valid Level 5 entries reflecting conservative loadings applied; CRO validation required. Any score above 124 is a data-entry error and must be returned to the CAIO office for correction. (Source of truth: CAIO office — CRO validated)",
+      "minimum": 0,
+      "maximum": 200
+    },
+    "adae_last_calculated": {
+      "type": "string",
+      "format": "date",
+      "description": "Must be within 12 months. Triggers reassessment warning at 11 months. Triggers non-compliance flag at 12 months + 1 day. (Source of truth: CAIO office)"
+    },
+    "adae_next_review_due": {
+      "type": "string",
+      "format": "date",
+      "description": "Computed as adae_last_calculated + 12 months, or 30 days after any material change, whichever is earlier. (Source of truth: System — computed)"
+    },
+    "gmi_level_at_deployment": {
+      "type": "integer",
+      "description": "[Mandatory on deployment] Snapshot of the organisation’s certified GMI level at deployment approval date. Immutable after recording. (Source of truth: CAIO office)",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "prompt_authority_scope_ref": {
+      "type": "string",
+      "description": "[Mandatory for Level 3+] Format: PASS-YYYY-NNN. Must reference a current, CAIO-signed scope statement. Null only for Level 1–2 systems where the CAIO has confirmed in writing that no prompt authority scope statement is required for this system; that confirmation is recorded by the CAIO office and available to Internal Audit on request. (Source of truth: CAIO office)"
+    },
+    "prompt_scope_last_reviewed": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory for Level 3+] Must be within 12 months and must post-date the most recent Material prompt change, MDAM amendment, or MAM amendment for this system — since an MAM amendment may reflect a prompt scope expansion requiring the scope statement to be updated. (Source of truth: CAIO office)"
+    },
+    "adae_under_reassessment": {
+      "type": "boolean",
+      "description": "Values: false │ true with reason string. Default: false. Set to true when a reassessment is initiated under POL-EDS-002 §3.6; reset to false when reassessment is completed and new score recorded. (Source of truth: CAIO office)"
+    }
+  },
+  "required": [
+    "autonomy_level",
+    "criticality_tier",
+    "delegation_tier",
+    "adae_score",
+    "adae_last_calculated",
+    "adae_next_review_due",
+    "adae_under_reassessment"
+  ],
+  "additionalProperties": true
+}

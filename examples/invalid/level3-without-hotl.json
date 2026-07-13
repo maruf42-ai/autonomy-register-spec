@@ -1,0 +1,120 @@
+{
+  "system_id": "SYS-2026-047",
+  "system_name": "Hardship Assessment Assistant",
+  "system_owner": "A. Whitfield, Head of Collections and Hardship",
+  "cto_technical_lead": "R. Nandi, Principal Engineer, Credit Platforms",
+  "accountable_executive": "J. Marsden, Chief Customer Officer",
+  "statutory_accountable_person": "J. Marsden, Chief Customer Officer",
+  "statutory_accountability_ref": "AS-2025-04",
+  "statutory_binding_status": "Reconciled",
+  "accountability_acceptance_ref": "AAR-2026-047",
+  "description": "Assesses consumer hardship applications and executes approved payment variations within defined limits.",
+  "operational_domains": [
+    "Consumer credit - hardship and financial difficulty"
+  ],
+  "production_deployment_date": "2026-06-02",
+  "current_status": "Active",
+  "autonomy_level": 3,
+  "criticality_tier": "High",
+  "delegation_tier": "Monitored",
+  "adae_score": 67,
+  "adae_last_calculated": "2026-05-12",
+  "adae_next_review_due": "2027-05-12",
+  "gmi_level_at_deployment": 2,
+  "prompt_authority_scope_ref": "PAS-2026-047",
+  "prompt_scope_last_reviewed": "2026-05-12",
+  "adae_under_reassessment": false,
+  "delegation_chain_role": "Standalone",
+  "foundation_model_dependency": "Yes",
+  "foundation_model_identifier": "vendor-foundation-model v3.2, hosted API endpoint",
+  "foundation_model_opacity_rating": "Partial",
+  "characterisation_assessment_date": "2026-04-28",
+  "behavioural_boundary_ref": "BBS-2026-047",
+  "provider_change_monitoring_status": "Active",
+  "mam_limit_per_decision": 40000.0,
+  "mam_approval_authority": "CAIO_CRO",
+  "domain_limit_daily": 400000.0,
+  "domain_limit_weekly": 1800000.0,
+  "domain_limit_monthly": 6000000.0,
+  "customer_population_cap": 8.0,
+  "decision_velocity_cap": 100,
+  "domain_limit_utilisation": 34.0,
+  "oversight_model": "HOTL",
+  "killswitch_operators": [
+    {
+      "name": "S. Oyelaran",
+      "title": "Hardship Operations Lead"
+    },
+    {
+      "name": "D. Cheng",
+      "title": "Senior Hardship Assessor"
+    },
+    {
+      "name": "R. Nandi",
+      "title": "Principal Engineer, Credit Platforms"
+    }
+  ],
+  "killswitch_last_tested": "2026-06-09",
+  "killswitch_next_test_due": "2026-09-09",
+  "nhi_count": 4,
+  "nhi_identifiers": [
+    "SVC-HARDSHIP-01",
+    "API-CORE-14",
+    "API-BUREAU-03",
+    "BOT-HRDSHP-02"
+  ],
+  "ciso_nhi_register_ref": "NHI-REG-2026-114",
+  "credential_rotation_schedule": 60,
+  "last_credential_rotation": "2026-06-20",
+  "next_rotation_due": "2026-08-19",
+  "caio_deployment_approval_date": "2026-05-26",
+  "ai_qa_gate_signoff_date": "2026-05-29",
+  "last_gate_signoff_date": "2026-05-29",
+  "pac_rule_rejustification_status": "Current",
+  "pac_rule_disposition_posture": "Fail-Safe",
+  "pac_rule_source_type": "Legal-Imported",
+  "pac_rule_source_watch_owner": "Head of Regulatory Affairs",
+  "pac_rule_fidelity_attestation_status": "Current",
+  "data_classification": "Highly_Sensitive",
+  "last_full_register_review": "2026-06-02",
+  "next_review_due": "2027-06-02",
+  "change_history_refs": [
+    "CHG-2026-311",
+    "CHG-2026-402"
+  ],
+  "incident_history_refs": [],
+  "approved_exception_refs": [],
+  "additional_notes": "Hardship volumes are rate-sensitive. Volume drift expected after any cash rate movement and after declared natural disasters.",
+  "raf_responsible_use_ref": "RUA-2026-047",
+  "data_provenance_certified": true,
+  "provenance_assessment_date": "2026-05-06",
+  "provenance_dataset_ids": [
+    "SYS-2026-047-DATA-001",
+    "SYS-2026-047-DATA-002"
+  ],
+  "consent_basis_status": "Active",
+  "data_quality_assessment_date": "2026-05-06",
+  "data_quality_result": "Pass",
+  "last_distribution_shift_test_date": "2026-07-01",
+  "distribution_shift_result": "Warning (approaching threshold)",
+  "bias_assessment_status": "Current",
+  "last_fairness_assessment_date": "2026-05-20",
+  "fairness_assessment_reference": "FA-2026-047",
+  "bias_assessment_outcome": "Pass",
+  "approved_knowledge_sources": [
+    "Hardship Policy Corpus",
+    "Regulatory Hardship Guidance Corpus",
+    "Serviceability Parameters Table"
+  ],
+  "retrieval_freshness_obligation": "Hardship Policy Corpus: 7 days; Regulatory Hardship Guidance Corpus: 30 days; Serviceability Parameters Table: 7 days",
+  "retrieval_corpus_suspension_trigger": "High",
+  "retrieval_corpus_status": "Current",
+  "static_authority_facts": [
+    "Cash rate",
+    "Serviceability floor buffer",
+    "Regulatory response timeframes"
+  ],
+  "external_fact_reverification_obligation": "Cash rate: 1 day; Serviceability floor buffer: 30 days; Regulatory response timeframes: 90 days",
+  "external_fact_suspension_trigger": "High",
+  "external_fact_currency_status": "Current"
+}

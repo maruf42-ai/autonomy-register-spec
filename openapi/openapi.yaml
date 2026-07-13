@@ -1,0 +1,170 @@
+openapi: 3.1.0
+info:
+  title: Autonomy Register API
+  version: "1.0.0"
+  summary: Read and write entries in the Autonomy Register.
+  description: |
+    The register records the authority delegated to each AI system: who is accountable for it,
+    what it may do, how it is overseen, and what it relies on.
+
+    Derived from STD-EDS-007 (Autonomy Register Data Model). This document specifies the interface;
+    the governance instruments that populate it are not part of this specification.
+
+    Access is role-bound. Read: assurance function, CAIO office, CRO office, internal audit, CISO.
+    Write: CAIO office only. Every write is logged with timestamp, client identity, operation,
+    field-level before/after values, and the change reference.
+  license:
+    name: Apache-2.0
+    identifier: Apache-2.0
+
+servers:
+  - url: https://{host}/api/v1
+    variables:
+      host:
+        default: register.example.org
+
+security:
+  - oauth2: []
+
+paths:
+  /register/systems:
+    get:
+      summary: List system entries
+      parameters:
+        - { in: query, name: status, schema: { type: string, enum: [Active, Suspended, Pending Deployment, Retired] } }
+        - { in: query, name: autonomy_level, schema: { type: integer, minimum: 1, maximum: 5 } }
+        - { in: query, name: criticality_tier, schema: { type: string, enum: [Critical, High, Moderate, Low] } }
+        - { in: query, name: owner, schema: { type: string } }
+      responses:
+        "200":
+          description: Array of system summary objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/RegisterEntry" }
+    post:
+      summary: Create a system entry. Status is set to Pending Deployment.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RegisterEntry" }
+      responses:
+        "201": { description: Created; system_id assigned }
+        "422": { $ref: "#/components/responses/ValidationFailure" }
+        "409": { description: A system with this name already exists }
+
+  /register/systems/{system_id}:
+    parameters:
+      - { in: path, name: system_id, required: true, schema: { type: string, pattern: "^SYS-[0-9]{4}-[0-9]{3}$" } }
+    get:
+      summary: Retrieve a full entry
+      responses:
+        "200":
+          description: Full system object
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RegisterEntry" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      summary: Replace all mutable fields. Immutable fields are ignored.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RegisterEntry" }
+      responses:
+        "200": { description: Updated }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422": { $ref: "#/components/responses/ValidationFailure" }
+    patch:
+      summary: Update specific fields. An attempt to modify an immutable field is rejected.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        "200": { description: Updated }
+        "422": { $ref: "#/components/responses/ValidationFailure" }
+
+  /register/systems/{system_id}/retire:
+    parameters:
+      - { in: path, name: system_id, required: true, schema: { type: string } }
+    post:
+      summary: Retire a system. Requires retirement_date and retirement_reason.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [retirement_date, retirement_reason]
+              properties:
+                retirement_date: { type: string, format: date }
+                retirement_reason: { type: string, maxLength: 500 }
+      responses:
+        "200": { description: Retired }
+        "422": { $ref: "#/components/responses/ValidationFailure" }
+
+  /register/portfolio:
+    get:
+      summary: Portfolio ADAE summary (computed view)
+      responses:
+        "200": { description: Portfolio summary object }
+
+  /register/alerts:
+    get:
+      summary: Entries carrying an active compliance flag
+      description: |
+        Overdue ADAE recalculation, overdue kill-switch test, overdue register review,
+        non-compliant prompt authority scope.
+      responses:
+        "200": { description: Array of flagged entries }
+
+  /register/raf-status:
+    get:
+      summary: Responsible-AI field summary across all systems
+      responses:
+        "200": { description: Array of entries with Section J fields only }
+
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.example.org/oauth2/token
+          scopes:
+            register.read: Read register entries
+            register.write: Create and modify entries (CAIO office only)
+  responses:
+    NotFound:
+      description: No such system_id
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, const: not_found }
+              system_id: { type: string }
+    ValidationFailure:
+      description: One or more fields failed validation
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, const: validation_failure }
+              fields:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field: { type: string }
+                    value: {}
+                    rule: { type: string }
+  schemas:
+    RegisterEntry:
+      $ref: "../schema/register-entry.schema.json"

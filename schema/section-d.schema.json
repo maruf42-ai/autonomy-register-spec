@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-d.schema.json",
+  "title": "Autonomy Register — Section D: Foundation Model Dependency Fields",
+  "description": "Section D of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "foundation_model_dependency": {
+      "type": "string",
+      "enum": [
+        "Yes",
+        "Partial",
+        "No"
+      ],
+      "description": "Values: Yes │ Partial │ No. Yes = system behaviour materially determined by a foundation model not trained or fine-tuned by the organisation. Partial = fine-tuned derivative. No = fully internally trained or rule-based. Default: No. (Source of truth: CAIO)"
+    },
+    "foundation_model_identifier": {
+      "type": "string",
+      "description": "[Mandatory where dependency = Yes or Partial] Format: [Provider name] — [Model name/version/API endpoint]. Null where dependency = No. (Source of truth: CAIO)"
+    },
+    "foundation_model_opacity_rating": {
+      "type": "string",
+      "enum": [
+        "Documented",
+        "Partial",
+        "Opaque"
+      ],
+      "description": "[Mandatory where dependency = Yes or Partial] Values: Documented │ Partial │ Opaque. Documented = provider publishes training data summary, capability evaluations, and known limitations. Partial = provider publishes some but not all. Opaque = provider publishes none. Assessed by CAIO using available provider disclosures and independent evaluations. Null where dependency = No. (Source of truth: CAIO)"
+    },
+    "characterisation_assessment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory where dependency = Yes or Partial] Must be within 12 months. Must be updated within 30 days of any confirmed provider model update. Triggers non-compliance flag when overdue. Null where dependency = No. (Source of truth: CAIO)"
+    },
+    "behavioural_boundary_ref": {
+      "type": "string",
+      "description": "[Mandatory where dependency = Yes or Partial] Format: BBP-YYYY-NNN. References the behavioural boundary parameter specification document per STD-EDS-003 §11.3. Null where dependency = No. (Source of truth: CAIO)"
+    },
+    "provider_change_monitoring_status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Lapsed",
+        "Not_applicable"
+      ],
+      "description": "[Mandatory where dependency = Yes or Partial] Values: Active │ Lapsed │ Not_applicable. Active = confirmed mechanism for receiving or detecting provider model update notifications is operational. Lapsed = mechanism existed but is no longer confirmed active. Not_applicable = dependency = No. (Source of truth: CAIO)"
+    }
+  },
+  "required": [
+    "foundation_model_dependency"
+  ],
+  "additionalProperties": true
+}

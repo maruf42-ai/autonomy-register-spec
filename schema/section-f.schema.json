@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-f.schema.json",
+  "title": "Autonomy Register — Section F: Human Oversight",
+  "description": "Section F of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "oversight_model": {
+      "type": "string",
+      "enum": [
+        "HITL",
+        "HOTL",
+        "HAL"
+      ],
+      "description": "Values: HITL │ HOTL │ HAL. Must match the MDAM entry for the operational domain. (Source of truth: CAIO)"
+    },
+    "primary_hotl_supervisor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "certification_expiry": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": true,
+      "description": "[Mandatory for Level 3+] cert_ref must reference a valid FRM-EDS-003 certification record. cert_expiry must be a future date. Null for Level 1–2 systems. (Source of truth: CAIO)"
+    },
+    "backup_hotl_supervisors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "certification_expiry": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": true
+      },
+      "description": "[Mandatory for Level 3+] Minimum one backup required at Level 3+. Minimum two at Level 4+. Null for Level 1–2. (Source of truth: CAIO)"
+    },
+    "hotl_coverage_hours": {
+      "type": "string",
+      "description": "[Mandatory for Level 3+] Format: 24x7 │ Business_hours_HH:MM-HH:MM_AEST │ Custom:[description]. Must specify named coverage periods. (Source of truth: CAIO)"
+    },
+    "killswitch_operators": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": true
+      },
+      "description": "Minimum one for Level 1–2. Minimum two for Level 3. Minimum three for Level 4+. Training date must be within 12 months. (Source of truth: CAIO / CTO)"
+    },
+    "killswitch_last_tested": {
+      "type": "string",
+      "format": "date",
+      "description": "Level 3: within 90 days. Level 4–5: within 30 days. Triggers non-compliance flag if overdue. (Source of truth: CTO)"
+    },
+    "killswitch_next_test_due": {
+      "type": "string",
+      "format": "date",
+      "description": "Computed from killswitch_last_tested + testing frequency per autonomy_level. (Source of truth: System — computed)"
+    }
+  },
+  "required": [
+    "oversight_model",
+    "killswitch_operators",
+    "killswitch_last_tested",
+    "killswitch_next_test_due"
+  ],
+  "additionalProperties": true
+}

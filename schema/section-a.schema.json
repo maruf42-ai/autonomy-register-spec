@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-a.schema.json",
+  "title": "Autonomy Register — Section A: System Identity",
+  "description": "Section A of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "system_id": {
+      "type": "string",
+      "description": "Format: SYS-YYYY-NNN. Unique across all entries including retired. Immutable after assignment. (Source of truth: CAIO office)"
+    },
+    "system_name": {
+      "type": "string",
+      "description": "Human-readable. Unique across all active entries. No special characters except hyphens and spaces. (Source of truth: System owner)"
+    },
+    "system_owner": {
+      "type": "string",
+      "description": "Must reference a current employee. Cannot be the CAIO office or AI QA Function. Owner and accountable-role fields are validated against the live HR system at routing time, not only at registration. A role reference that resolves to a departed or rotated holder whose directory entry has not yet been updated is treated identically to a vacant role: the flag faults rather than routing to a stale holder, and the fault is escalated under POL-EDS-003. Absence of a current HR-confirmed holder is a rout"
+    },
+    "cto_technical_lead": {
+      "type": "string",
+      "description": "Must reference a current employee in the CTO organisation. (Source of truth: CTO)"
+    },
+    "accountable_executive": {
+      "type": "string",
+      "description": "Must reference a current employee. Must match the accountable human executive named in the current MDAM entry for every domain in operational_domains. Validated against the live HR system at routing time; a reference resolving to a departed or rotated holder is a routing fault under POL-EDS-003, not a silent assignment. (Source of truth: CAIO office — validated against MDAM)"
+    },
+    "statutory_accountable_person": {
+      "type": "string",
+      "description": "The individual assigned accountability for the relevant area of responsibility under the applicable statutory accountability regime, or under formal Board or CEO delegation where none applies. Must equal accountable_executive unless statutory_binding_status is ‘Divergence Approved’. (Source of truth: General Counsel — sourced from the entity's statutory accountability records)"
+    },
+    "statutory_accountability_ref": {
+      "type": "string",
+      "description": "Reference and version or effective date of the record from which the statutory assignment is drawn. (Source of truth: General Counsel)"
+    },
+    "statutory_binding_status": {
+      "type": "string",
+      "enum": [
+        "Reconciled",
+        "Divergence Approved",
+        "Divergence Unapproved"
+      ],
+      "description": "Values: Reconciled │ Divergence Approved │ Divergence Unapproved. ‘Divergence Approved’ requires a BRC approval reference in approved_exception_refs. ‘Divergence Unapproved’ blocks deployment; an active system in this state must be suspended within 5 business days. (Source of truth: CAIO office — confirmed at each quarterly reconciliation)"
+    },
+    "accountability_acceptance_ref": {
+      "type": "string",
+      "description": "[Mandatory before activation] Format: AAR-YYYY-NNN. Must reference a signed Accountability Acceptance Record whose signing executive equals accountable_executive. Null permitted only where current_status is ‘Pending Deployment’. (Source of truth: CAIO office)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Plain language. Must not contain system_id or technical jargon as the primary content. (Source of truth: System owner)"
+    },
+    "operational_domains": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Each domain must match an approved MDAM domain entry. Minimum one domain. (Source of truth: CAIO office — validated against MDAM)"
+    },
+    "production_deployment_date": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory on activation] Format: YYYY-MM-DD. Null for Pending Deployment status. (Source of truth: CAIO office)"
+    },
+    "current_status": {
+      "type": "string",
+      "enum": [
+        "Active",
+        "Suspended",
+        "Pending Deployment",
+        "Retired"
+      ],
+      "description": "Values: Active │ Suspended │ Pending Deployment │ Retired. Default: Pending Deployment on creation. (Source of truth: CAIO office)"
+    }
+  },
+  "required": [
+    "system_id",
+    "system_name",
+    "system_owner",
+    "cto_technical_lead",
+    "accountable_executive",
+    "statutory_accountable_person",
+    "statutory_accountability_ref",
+    "statutory_binding_status",
+    "description",
+    "operational_domains",
+    "current_status"
+  ],
+  "additionalProperties": true
+}

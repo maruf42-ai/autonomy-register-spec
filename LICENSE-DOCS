@@ -1,0 +1,20 @@
+# Licence — documentation and examples
+
+The prose in this repository — `README.md`, everything under `docs/`, and the descriptive content of
+the worked example — is licensed under **Creative Commons Attribution-NonCommercial-NoDerivatives 4.0
+International (CC BY-NC-ND 4.0)**.
+
+    https://creativecommons.org/licenses/by-nc-nd/4.0/
+
+You may read it, quote it with attribution, and share it verbatim. You may not publish an adapted
+version of it, and you may not use it commercially.
+
+## This does not restrict the specification
+
+The machine-readable specification — everything under `schema/` and `openapi/`, and the structural
+content of `examples/` — is licensed under **Apache-2.0** (see `LICENSE`), which permits derivative
+works, commercial use, and redistribution, and includes an express patent grant.
+
+Implement the specification freely. Do not repackage the writing.
+
+© 2026 M Maruf Hossain.

@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/register-entry.schema.json",
+  "title": "Autonomy Register Entry",
+  "description": "A complete Autonomy Register entry: eleven mandatory field sections (A-K) recording the authority delegated to one AI system, who is accountable for it, how it is overseen, and what it relies on. Derived from STD-EDS-007 (Autonomy Register Data Model) and REG-EDS-001 (Autonomy Register). The allOf block below encodes the cross-section interlocks: a conformant entry must satisfy them, not merely populate every field.",
+  "type": "object",
+  "allOf": [
+    {
+      "$ref": "./section-a.schema.json"
+    },
+    {
+      "$ref": "./section-b.schema.json"
+    },
+    {
+      "$ref": "./section-c.schema.json"
+    },
+    {
+      "$ref": "./section-d.schema.json"
+    },
+    {
+      "$ref": "./section-e.schema.json"
+    },
+    {
+      "$ref": "./section-f.schema.json"
+    },
+    {
+      "$ref": "./section-g.schema.json"
+    },
+    {
+      "$ref": "./section-h.schema.json"
+    },
+    {
+      "$ref": "./section-i.schema.json"
+    },
+    {
+      "$ref": "./section-j.schema.json"
+    },
+    {
+      "$ref": "./section-k.schema.json"
+    },
+    {
+      "title": "Interlock 1 — Level 3+ requires HOTL supervision",
+      "if": {
+        "properties": {
+          "autonomy_level": {
+            "type": "integer",
+            "minimum": 3
+          }
+        },
+        "required": [
+          "autonomy_level"
+        ]
+      },
+      "then": {
+        "required": [
+          "primary_hotl_supervisor",
+          "backup_hotl_supervisors",
+          "hotl_coverage_hours",
+          "prompt_authority_scope_ref",
+          "prompt_scope_last_reviewed"
+        ],
+        "properties": {
+          "oversight_model": {
+            "enum": [
+              "HITL",
+              "HOTL"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "title": "Interlock 2 — Level 3+ requires GMI 2, Level 4 requires GMI 3, Level 5 requires GMI 4",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "autonomy_level": {
+                "const": 3
+              }
+            },
+            "required": [
+              "autonomy_level"
+            ]
+          },
+          "then": {
+            "properties": {
+              "gmi_level_at_deployment": {
+                "type": "integer",
+                "minimum": 2
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "autonomy_level": {
+                "const": 4
+              }
+            },
+            "required": [
+              "autonomy_level"
+            ]
+          },
+          "then": {
+            "properties": {
+              "gmi_level_at_deployment": {
+                "type": "integer",
+                "minimum": 3
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "autonomy_level": {
+                "const": 5
+              }
+            },
+            "required": [
+              "autonomy_level"
+            ]
+          },
+          "then": {
+            "properties": {
+              "gmi_level_at_deployment": {
+                "type": "integer",
+                "minimum": 4
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Interlock 3 — MAM must sit within the delegation tier ceiling (POL-EDS-002)",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "delegation_tier": {
+                "const": "Supervised"
+              }
+            },
+            "required": [
+              "delegation_tier"
+            ]
+          },
+          "then": {
+            "properties": {
+              "mam_limit_per_decision": {
+                "type": "number",
+                "maximum": 25000
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "delegation_tier": {
+                "const": "Monitored"
+              }
+            },
+            "required": [
+              "delegation_tier"
+            ]
+          },
+          "then": {
+            "properties": {
+              "mam_limit_per_decision": {
+                "type": "number",
+                "maximum": 250000
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "Interlock 4 — an orchestrator must declare its chain",
+      "if": {
+        "properties": {
+          "delegation_chain_role": {
+            "const": "Orchestrator"
+          }
+        },
+        "required": [
+          "delegation_chain_role"
+        ]
+      },
+      "then": {
+        "required": [
+          "delegation_chain_depth",
+          "registered_sub_agent_ids",
+          "chain_authority_ceiling",
+          "last_chain_integrity_assessment",
+          "next_chain_assessment_due"
+        ]
+      }
+    },
+    {
+      "title": "Interlock 5 — a sub-agent must name its orchestrator",
+      "if": {
+        "properties": {
+          "delegation_chain_role": {
+            "const": "Sub-Agent"
+          }
+        },
+        "required": [
+          "delegation_chain_role"
+        ]
+      },
+      "then": {
+        "required": [
+          "registered_orchestrator_id"
+        ]
+      }
+    },
+    {
+      "title": "Interlock 6 — a foundation-model dependency must be characterised",
+      "if": {
+        "properties": {
+          "foundation_model_dependency": {
+            "enum": [
+              "Yes",
+              "Partial"
+            ]
+          }
+        },
+        "required": [
+          "foundation_model_dependency"
+        ]
+      },
+      "then": {
+        "required": [
+          "foundation_model_identifier",
+          "foundation_model_opacity_rating",
+          "characterisation_assessment_date",
+          "behavioural_boundary_ref",
+          "provider_change_monitoring_status"
+        ]
+      }
+    },
+    {
+      "title": "Interlock 7 — a retrieval layer must declare freshness and consequence",
+      "if": {
+        "properties": {
+          "approved_knowledge_sources": {
+            "type": "array",
+            "minItems": 1
+          }
+        },
+        "required": [
+          "approved_knowledge_sources"
+        ]
+      },
+      "then": {
+        "required": [
+          "retrieval_freshness_obligation",
+          "retrieval_corpus_suspension_trigger",
+          "retrieval_corpus_status"
+        ]
+      }
+    },
+    {
+      "title": "Interlock 8 — static authority facts must declare re-verification and consequence",
+      "if": {
+        "properties": {
+          "static_authority_facts": {
+            "type": "array",
+            "minItems": 1
+          }
+        },
+        "required": [
+          "static_authority_facts"
+        ]
+      },
+      "then": {
+        "required": [
+          "external_fact_reverification_obligation",
+          "external_fact_suspension_trigger",
+          "external_fact_currency_status"
+        ]
+      }
+    },
+    {
+      "title": "Interlock 9 — a fairness assessment that is not Not Required must be evidenced",
+      "if": {
+        "properties": {
+          "bias_assessment_status": {
+            "enum": [
+              "Current",
+              "Overdue",
+              "Suspended"
+            ]
+          }
+        },
+        "required": [
+          "bias_assessment_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "last_fairness_assessment_date",
+          "fairness_assessment_reference",
+          "bias_assessment_outcome"
+        ]
+      }
+    },
+    {
+      "title": "Interlock 10 — NHI credentials must be enumerated and reconciled",
+      "if": {
+        "properties": {
+          "nhi_count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "nhi_count"
+        ]
+      },
+      "then": {
+        "required": [
+          "nhi_identifiers",
+          "ciso_nhi_register_ref"
+        ]
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-c.schema.json",
+  "title": "Autonomy Register — Section C: Delegation Chain Fields",
+  "description": "Section C of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "delegation_chain_role": {
+      "type": "string",
+      "enum": [
+        "Standalone",
+        "Orchestrator",
+        "Sub-Agent",
+        "Orchestrator-Sub-Agent"
+      ],
+      "description": "Values: Standalone │ Orchestrator │ Sub-Agent │ Orchestrator-Sub-Agent. Default: Standalone. Must be reviewed at each ADAE recalculation. (Source of truth: CAIO)"
+    },
+    "delegation_chain_depth": {
+      "type": "integer",
+      "description": "[Mandatory for Orchestrator] Values: 0 (Standalone or Sub-Agent only), 1 (orchestrator directs sub-agents), 2 (two-layer chain), 3 (three or more layers). Null where delegation_chain_role = Standalone or Sub-Agent. Must match the depth loading applied in the adae_score calculation. (Source of truth: CAIO)",
+      "minimum": 0,
+      "maximum": 3
+    },
+    "registered_sub_agent_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "[Mandatory for Orchestrator] Format: SYS-YYYY-NNN. Each listed ID must resolve to an Active Autonomy Register entry. Array must be updated within 5 business days of any change to the authorised sub-agent set. Null where delegation_chain_role = Standalone or Sub-Agent. (Source of truth: CAIO office)"
+    },
+    "registered_orchestrator_id": {
+      "type": "string",
+      "description": "[Mandatory for Sub-Agent] Format: SYS-YYYY-NNN. Must resolve to an Active Autonomy Register entry with delegation_chain_role = Orchestrator or Orchestrator-Sub-Agent. Null where delegation_chain_role = Standalone or Orchestrator. (Source of truth: CAIO office)"
+    },
+    "chain_authority_ceiling": {
+      "type": "number",
+      "description": "[Mandatory for Orchestrator] Currency value in AUD. Must not exceed the orchestrating system's individual mam_limit multiplied by the count of registered_sub_agent_ids at any point in time. Null where delegation_chain_role = Standalone or Sub-Agent. (Source of truth: CAIO)"
+    },
+    "last_chain_integrity_assessment": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory for Orchestrator] Must be within 12 months. Triggers non-compliance flag when overdue. Null where delegation_chain_role = Standalone or Sub-Agent. (Source of truth: CAIO)"
+    },
+    "next_chain_assessment_due": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory for Orchestrator — derived] Computed as last_chain_integrity_assessment + 12 months, or within 30 days of any change to registered_sub_agent_ids or delegation_chain_depth. Null where delegation_chain_role = Standalone or Sub-Agent. (Source of truth: CAIO office)"
+    }
+  },
+  "required": [
+    "delegation_chain_role"
+  ],
+  "additionalProperties": true
+}

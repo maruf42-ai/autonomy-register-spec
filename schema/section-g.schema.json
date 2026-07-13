@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-g.schema.json",
+  "title": "Autonomy Register — Section G: NHI Credentials",
+  "description": "Section G of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "nhi_count": {
+      "type": "integer",
+      "description": "≥ 0. If 0: system has no NHIs (must be documented and CAIO-approved — very unusual for Level 3+ systems). (Source of truth: CISO)",
+      "minimum": 0
+    },
+    "nhi_identifiers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "[Mandatory if nhi_count > 0] Each identifier must match an entry in the CISO NHI register. Format per Section 2.1. (Source of truth: CISO)"
+    },
+    "ciso_nhi_register_ref": {
+      "type": "string",
+      "description": "[Mandatory if nhi_count > 0] Format: NHI-REG-YYYY-NNN. References the CISO’s NHI lifecycle register entry for this system. (Source of truth: CISO)"
+    },
+    "credential_rotation_schedule": {
+      "type": "integer",
+      "description": "Per POL-EDS-005 Section 7.1. Maximum varies by credential type and Autonomy Level — long-lived secrets: 90/60/30 days (Levels 1–2/3/4–5); client certificates: 1 year/6 months (Levels 1–3/4–5); signing keys: 180/90 days (Levels 1–3/4–5); short-lived tokens: 24 hours at all levels. Record the schedule applicable to this NHI’s credential type. (Source of truth: CISO — per POL-EDS-005 §4)",
+      "minimum": 1,
+      "maximum": 90
+    },
+    "last_credential_rotation": {
+      "type": "string",
+      "format": "date",
+      "description": "Must not exceed the credential_rotation_schedule. Triggers Level 1 incident flag if overdue. (Source of truth: CISO)"
+    },
+    "next_rotation_due": {
+      "type": "string",
+      "format": "date",
+      "description": "Computed as last_credential_rotation + credential_rotation_schedule. (Source of truth: System — computed)"
+    }
+  },
+  "required": [
+    "nhi_count",
+    "credential_rotation_schedule",
+    "last_credential_rotation",
+    "next_rotation_due"
+  ],
+  "additionalProperties": true
+}

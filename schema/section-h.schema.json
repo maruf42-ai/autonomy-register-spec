@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-h.schema.json",
+  "title": "Autonomy Register — Section H: Approval and Lifecycle",
+  "description": "Section H of the Autonomy Register entry, as specified in STD-EDS-007.",
+  "type": "object",
+  "properties": {
+    "caio_deployment_approval_date": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory on activation] Approval lapses if production_deployment_date is not set within 90 days. (Source of truth: CAIO)"
+    },
+    "ai_qa_gate_signoff_date": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory on activation] Must pre-date production_deployment_date. Records the initial deployment gate sign-off only. For the most recent gate sign-off following any subsequent Material change, see last_gate_signoff_date. (Source of truth: AI QA Lead)"
+    },
+    "last_gate_signoff_date": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory on any Material change] Must pre-date the most recent production deployment or material change implementation date. Updated at every Category M or higher AI QA gate sign-off. Distinct from ai_qa_gate_signoff _date, which records the initial deployment gate only. (Source of truth: AI QA Lead)"
+    },
+    "accountable_role_last_reattestation": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory on any accountable-role change while a re-justification or continued-operation determination is live] Records the date the incoming accountable-role holder re-attested live determinations at handover per STD-EDS-004 §1.2. Null where no such determination was live at the change. (Source of truth: CAIO)"
+    },
+    "pac_rule_rejustification_status": {
+      "type": "string",
+      "description": "[Mandatory for all systems at Autonomy Level 2 and above] Values: Current (all PaC rules re-justified within 12 months or since last material change to founding conditions); Review Required (one or more founding conditions have changed; re-justification review pending); Overdue (re-justification review not completed within 30 days of trigger); Unfounded (one or more PaC rules have no founding conditions on record and cannot be re-justified against a baseline; held under Fail-Safe posture pending",
+      "enum": [
+        "Current",
+        "Review Required",
+        "Overdue",
+        "Unfounded"
+      ]
+    },
+    "pac_rule_drift_timestamps": {
+      "type": "string",
+      "description": "[Mandatory where rejustification_status is Review Required, Overdue, or Unfounded] Records both the drift event time (when the premise first violated its declared invariant in telemetry) and the drift observation time (when the observer emitted the residual). Where the two diverge, the disposition clock binds to the event time. (Source of truth: CAIO)"
+    },
+    "pac_rule_premise_provenance": {
+      "type": "string",
+      "description": "[Mandatory where pac_rule_ rejustification_status is Unfounded] Values: Premise-Absent (no founding premise was ever recorded); Premise-Lost (a founding premise existed but is unrecoverable). Premise-Lost may be reconstructed if recovered; Premise-Absent can only be newly founded or retired. (Source of truth: CAIO)",
+      "enum": [
+        "Premise-Absent",
+        "Premise-Lost"
+      ]
+    },
+    "pac_rule_disposition_posture": {
+      "type": "string",
+      "enum": [
+        "Escalate",
+        "Fail-Safe"
+      ],
+      "description": "[Mandatory for all production PaC rules] Values: Escalate; Fail-Safe. Set at rule authoring time per STD-EDS-005 §2.2 and immutable without a version change to the rule’s founding conditions record. For an unfounded rule (no founding conditions on record), Fail-Safe is assigned at the point of identification under POL-EDS-004 §10.1 rather than at authoring; this is the sole exception, and the posture becomes immutable once a founding conditions record is reconstructed. (Source of truth: CAIO — s"
+    },
+    "pac_rule_source_type": {
+      "type": "string",
+      "enum": [
+        "Legal-Imported",
+        "Commitment-Chosen",
+        "Judgment-Delegated"
+      ],
+      "description": "[Mandatory at Autonomy Level 2+] Values: Legal-Imported; Commitment-Chosen; Judgment-Delegated. (Source of truth: CAIO)"
+    },
+    "pac_rule_source_watch_owner": {
+      "type": "string",
+      "description": "[Mandatory where any rule is Legal-Imported] Named role accountable for source-change detection; defaults to the rule’s accountable role unless a specialist is designated. (Source of truth: CAIO)"
+    },
+    "pac_rule_fidelity_attestation_status": {
+      "type": "string",
+      "enum": [
+        "Current",
+        "Review Required",
+        "Overdue"
+      ],
+      "description": "[Mandatory at Autonomy Level 2+] Values: Current; Review Required; Overdue. Records attesting officer (AI QA Lead) and attestation date per attested rule version. (Source of truth: AI QA Lead — updated within 5 business days of any trigger or re-attestation)"
+    },
+    "data_classification": {
+      "type": "string",
+      "enum": [
+        "Highly_Sensitive",
+        "Sensitive",
+        "Internal",
+        "Public"
+      ],
+      "description": "Values: Highly_Sensitive │ Sensitive │ Internal │ Public. Determines Privacy Impact Assessment requirements. (Source of truth: System owner — CAIO validated)"
+    },
+    "last_full_register_review": {
+      "type": "string",
+      "format": "date",
+      "description": "Must be within 12 months. Triggers stale entry flag at 12 months + 1 day. (Source of truth: CAIO office)"
+    },
+    "next_review_due": {
+      "type": "string",
+      "format": "date",
+      "description": "Computed as last_full_register_review + 12 months. (Source of truth: System — computed)"
+    },
+    "change_history_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Format: CHG-YYYY-NNN. Empty array acceptable on initial registration. Updated on every approved change. (Source of truth: CAIO office)"
+    },
+    "incident_history_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Format: INC-YYYY-NNN. Empty array acceptable if no incidents. (Source of truth: CAIO office)"
+    },
+    "retirement_date": {
+      "type": "string",
+      "format": "date",
+      "description": "[Mandatory on retirement] Null for Active and Pending Deployment. Immutable once set. (Source of truth: CAIO — written authorisation required)"
+    },
+    "retirement_reason": {
+      "type": "string",
+      "description": "[Mandatory on retirement] Null for Active and Pending Deployment. Immutable once set. (Source of truth: CAIO)"
+    },
+    "approved_exception_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Format: EXC-YYYY-NNN. Empty array acceptable if no exceptions apply. Each reference must correspond to a current approved exception record under POL-EDS-002 §9. (Source of truth: CAIO office)"
+    }
+  },
+  "required": [
+    "data_classification",
+    "last_full_register_review",
+    "next_review_due",
+    "change_history_refs",
+    "incident_history_refs",
+    "approved_exception_refs"
+  ],
+  "additionalProperties": true
+}
