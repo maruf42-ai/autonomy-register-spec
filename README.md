@@ -6,7 +6,7 @@ information is secret, but because there is nowhere it is written down.
 
 This repository is the specification that makes it recordable.
 
-- **`schema/`** — JSON Schema (2020-12) for a complete register entry: eleven sections, 98 fields.
+- **`schema/`** — JSON Schema (2020-12) for a complete register entry: twelve sections, 103 fields.
 - **`openapi/`** — the register API: nine endpoints, role-bound, every write logged.
 - **`examples/`** — a fully worked entry for a fictional lender's hardship-assessment agent, and five
   entries that are *deliberately invalid*, each violating one interlock.
