@@ -29,11 +29,12 @@ The worked example validates against the schema on every push. So do the invalid
 | I · Additional Notes | Anything material that no other field captures |
 | J · Responsible-AI Fields | Fairness, provenance, consent, drift |
 | K · Grounding and Admissibility | What it retrieves, how stale that may become, and what happens when it does |
+| L · Tooling Dependencies | Which tools built, tested, deployed and watch it — and at which versions |
 
 ## The interlocks
 
 A register entry can be complete and still be wrong, because the fields constrain one another. The
-composite schema encodes ten of these. A conformant entry must satisfy them:
+composite schema encodes eleven of these. A conformant entry must satisfy them:
 
 1. Autonomy Level 3 and above requires a named certified supervisor, named backups, and stated coverage hours.
 2. Level 3 requires governance maturity 2; Level 4 requires 3; Level 5 requires 4.
@@ -45,8 +46,9 @@ composite schema encodes ten of these. A conformant entry must satisfy them:
 8. The same, for any static fact its authority was assessed against.
 9. A fairness assessment that is not "Not Required" must be evidenced by a dated report and an outcome.
 10. Credentials must be enumerated individually and reconciled against the security register.
+11. Autonomy Level 2 and above must declare the tools it depends on, at the versions in use, with a confirmation date.
 
-The five files in `examples/invalid/` each break exactly one of these, and the CI asserts that the
+The seven files in `examples/invalid/` each break exactly one of these, and the CI asserts that the
 schema rejects them. A specification that only ever validates is not being tested.
 
 ## Validate locally
