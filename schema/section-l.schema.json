@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/section-l.schema.json",
+  "title": "Autonomy Register — Section L: Tooling Dependencies",
+  "description": "Section L of the Autonomy Register entry, as specified in STD-EDS-007 §2.13. Records the tooling estate on which the system depends. Tool attributes are held once in the STD-EDS-005 Tooling Resource Catalogue; this section records which tools a given system depends on and at what version, so that the tooling configuration active at any point in the system's history can be reconstructed.",
+  "type": "object",
+  "properties": {
+    "tooling_dependencies": {
+      "type": "array",
+      "description": "[Mandatory for all systems at autonomy level 2 and above] One entry per tool on which this system depends. Empty array permitted only for level 1 systems with CAIO-recorded rationale. Updated within 5 business days of any change to the system's tooling dependencies. (Source of truth: CAIO office / CTO)",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tool_ref": {
+            "type": "string",
+            "pattern": "^TOOL-[0-9]{4}-[0-9]{3}$",
+            "description": "Catalogue reference in the format TOOL-YYYY-NNN. Must match an Active entry in the STD-EDS-005 Tooling Resource Catalogue. A reference to a Retired entry is a Level 1 governance incident under STD-EDS-007 §7. (Source of truth: CAIO office)"
+          },
+          "tool_version": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "The version, release, or build identifier of the tool as used by this system. Captured from the tool, not inferred from configuration. Where the catalogue records release channel as vendor-controlled continuous, record 'Vendor-controlled — not pinnable' and the date of last observed behaviour validation. (Source of truth: CTO)"
+          },
+          "lifecycle_stage": {
+            "type": "string",
+            "enum": [
+              "development",
+              "data conditioning",
+              "evaluation",
+              "deployment",
+              "monitoring"
+            ],
+            "description": "The AI lifecycle stage this tool serves for this system. A tool serving more than one stage is recorded once per stage. (Source of truth: CAIO office)"
+          },
+          "dependency_confirmed_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date the dependency and its version were last confirmed against the operating system. Must be within 90 days for systems at autonomy level 3 and above; within 12 months for levels 1-2. A stale confirmation asserts a version that may no longer be true. (Source of truth: CTO)"
+          }
+        },
+        "required": [
+          "tool_ref",
+          "tool_version",
+          "lifecycle_stage",
+          "dependency_confirmed_date"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "tooling_dependencies_next_confirmation_due": {
+      "type": "string",
+      "format": "date",
+      "description": "[Derived — do not set by hand] Computed as the earliest dependency_confirmed_date in tooling_dependencies plus the confirmation interval for the system's autonomy level (90 days at level 3 and above; 12 months at levels 1-2). Triggers a stale tooling flag when passed. (Source of truth: system — computed)"
+    }
+  },
+  "required": [],
+  "additionalProperties": true
+}

@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/maruf42-ai/autonomy-register-spec/main/schema/register-entry.schema.json",
   "title": "Autonomy Register Entry",
-  "description": "A complete Autonomy Register entry: eleven mandatory field sections (A-K) recording the authority delegated to one AI system, who is accountable for it, how it is overseen, and what it relies on. Derived from STD-EDS-007 (Autonomy Register Data Model) and REG-EDS-001 (Autonomy Register). The allOf block below encodes the cross-section interlocks: a conformant entry must satisfy them, not merely populate every field.",
+  "description": "A complete Autonomy Register entry: twelve mandatory field sections (A-L) recording the authority delegated to one AI system, who is accountable for it, how it is overseen, and what it relies on. Derived from STD-EDS-007 (Autonomy Register Data Model) and REG-EDS-001 (Autonomy Register). The allOf block below encodes the cross-section interlocks: a conformant entry must satisfy them, not merely populate every field.",
   "type": "object",
   "allOf": [
     {
@@ -37,6 +37,9 @@
     },
     {
       "$ref": "./section-k.schema.json"
+    },
+    {
+      "$ref": "./section-l.schema.json"
     },
     {
       "title": "Interlock 1 — Level 3+ requires HOTL supervision",
@@ -328,6 +331,32 @@
           "nhi_identifiers",
           "ciso_nhi_register_ref"
         ]
+      }
+    },
+    {
+      "title": "Interlock 11 — level 2 and above must declare its tooling estate",
+      "if": {
+        "properties": {
+          "autonomy_level": {
+            "type": "integer",
+            "minimum": 2
+          }
+        },
+        "required": [
+          "autonomy_level"
+        ]
+      },
+      "then": {
+        "required": [
+          "tooling_dependencies",
+          "tooling_dependencies_next_confirmation_due"
+        ],
+        "properties": {
+          "tooling_dependencies": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
       }
     }
   ],
