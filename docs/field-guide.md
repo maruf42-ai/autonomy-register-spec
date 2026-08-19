@@ -37,10 +37,22 @@ Tuesday. Authority is assessed at a moment; the information surface it was asses
 moving. These two fields are where an organisation states, in advance, how much drift it will tolerate
 and what it will do about it — rather than discovering the answer afterwards.
 
+### `tooling_dependencies`
+
+A catalogue reference alone would answer the wrong question. The catalogue holds a tool's current
+state; the register has to establish what governed a decision made eight months ago. If the
+evaluation harness has been upgraded twice since a model was validated, `TOOL-2026-004` on its own
+tells you nothing about which version ran the validation — so the version is recorded per system, and
+confirmed on a cycle, exactly as the model itself is pinned under STD-EDS-005.
+
+The cost is drift: a tool upgrade now requires the entry to be updated, and a stale version string is
+worse than no version string, because it asserts something false. That is what
+`dependency_confirmed_date` is for, and why the confirmation interval tightens at autonomy level 3.
+
 ## Derived fields — do not set these by hand
 
 `delegation_tier`, `adae_next_review_due`, `next_review_due`, `next_rotation_due`,
-`killswitch_next_test_due`, `next_chain_assessment_due`.
+`killswitch_next_test_due`, `next_chain_assessment_due`, `tooling_dependencies_next_confirmation_due`.
 
 Each is computed from another field. Where a register lets a human set them independently, the
 register will eventually disagree with itself.

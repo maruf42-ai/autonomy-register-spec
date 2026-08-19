@@ -236,6 +236,15 @@ the source moves.
 | Fact suspension trigger | High |
 | Fact currency status | Current |
 
+### Section L — Tooling Dependencies
+
+| Field | Value |
+| --- | --- |
+| Evaluation harness | `TOOL-2026-004` v2.11.3 — confirmed 2026-07-14 |
+| Deployment pipeline | `TOOL-2026-007` v4.2.0 — confirmed 2026-07-14 |
+| Monitoring agent | `TOOL-2026-011` vendor-controlled, not pinnable; behaviour validated 2026-07-02 — confirmed 2026-07-02 |
+| Next confirmation due | 2026-09-30 |
+
 ---
 
 ## What this entry is for
