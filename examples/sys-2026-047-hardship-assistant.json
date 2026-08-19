@@ -134,5 +134,26 @@
   ],
   "external_fact_reverification_obligation": "Cash rate: 1 day; Serviceability floor buffer: 30 days; Regulatory response timeframes: 90 days",
   "external_fact_suspension_trigger": "High",
-  "external_fact_currency_status": "Current"
+  "external_fact_currency_status": "Current",
+  "tooling_dependencies": [
+    {
+      "tool_ref": "TOOL-2026-004",
+      "tool_version": "2.11.3",
+      "lifecycle_stage": "evaluation",
+      "dependency_confirmed_date": "2026-07-14"
+    },
+    {
+      "tool_ref": "TOOL-2026-007",
+      "tool_version": "4.2.0",
+      "lifecycle_stage": "deployment",
+      "dependency_confirmed_date": "2026-07-14"
+    },
+    {
+      "tool_ref": "TOOL-2026-011",
+      "tool_version": "Vendor-controlled — not pinnable; behaviour validated 2026-07-02",
+      "lifecycle_stage": "monitoring",
+      "dependency_confirmed_date": "2026-07-02"
+    }
+  ],
+  "tooling_dependencies_next_confirmation_due": "2026-09-30"
 }
