@@ -119,7 +119,7 @@ paths:
       summary: Entries carrying an active compliance flag
       description: |
         Overdue ADAE recalculation, overdue kill-switch test, overdue register review,
-        non-compliant prompt authority scope.
+        non-compliant prompt authority scope, stale tooling dependency confirmation.
       responses:
         "200": { description: Array of flagged entries }
 
